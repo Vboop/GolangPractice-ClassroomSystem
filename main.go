@@ -135,6 +135,8 @@ func editMenu() {
 			editClass()
 		} else if menuOption == "/editSubject" {
 			editSubject()
+		} else if menuOption == "/mainMenu" {
+			mainMenu()
 		}
 
 	}
@@ -180,7 +182,7 @@ func editTeacher() {
 	tChoice = scanner.Text()
 	for _, v := range TEACHERS {
 		if strings.ToLower(tChoice) == strings.ToLower(v.FirstName) {
-			teacher = v
+			teacher = &*v
 			name := teacher.FirstName + " " + teacher.LastName
 			fmt.Println("\n\n\n\n\n ")
 			fmt.Println("* Edit Teacher *")
@@ -359,7 +361,7 @@ func editStudent() {
 	sChoice = scanner.Text()
 	for _, v := range STUDENTS {
 		if strings.ToLower(sChoice) == strings.ToLower(v.FirstName) {
-			student = v
+			student = &*v
 			name := student.FirstName + " " + student.LastName
 			fmt.Println("\n\n\n\n\n ")
 			fmt.Println("* Edit Student *")
@@ -445,10 +447,120 @@ func editClass() {
 }
 
 func editSubject() {
-	fmt.Println("Potatos Edit Subject")
+	var subject *Subject
+	var sChoice string
+	var name string = "Change Name"
+	var tt string = "Change Time Table"
+	var times []string
+	var timeTable map[string][]string
+
+	viewSubject()
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Println("Please Enter The Name Of The Subject You Would Like To Edit: ")
+	scanner.Scan()
+	sChoice = scanner.Text()
+	for _, v := range SUBJECTS {
+		if strings.ToLower(v.Name) == strings.ToLower(sChoice) {
+			subject = *&v
+		}
+	}
+	for {
+		fmt.Println("\n\n\n\n\n ")
+		fmt.Println("* Edit Subject *")
+		fmt.Printf("Name                 : %v \n", subject.Name)
+		fmt.Printf("Time Table           : %v \n", subject.TimeTable)
+
+		fmt.Printf("Would You Like To Edit Subject Name ( %v ) or Subject TimeTable ( %v ): \n\n", subject.Name, subject.TimeTable)
+		fmt.Printf("/name %#30q \n", name)
+		fmt.Printf("/timeTable %#31q \n", tt)
+
+		scanner.Scan()
+		sChoice = scanner.Text()
+		if sChoice == "/name" {
+			fmt.Println("Enter New Subject Name: ")
+			scanner.Scan()
+			sName := scanner.Text()
+			oldsName := subject.Name
+			subject.Name = sName
+			fmt.Printf("Subject Name Changed From %v to %v!", oldsName, subject.Name)
+			break
+		} else if sChoice == "/timeTable" {
+			for {
+				scanner := bufio.NewScanner(os.Stdin)
+				fmt.Println("Monday's TimeTable")
+				fmt.Println("Enter Time (00:00) or x to finish: ")
+				scanner.Scan()
+				time := scanner.Text()
+				if time == "x" {
+					timeTable = map[string][]string{"Monday": times}
+					fmt.Println(timeTable["Monday"])
+					break
+				}
+				times = append(times, time)
+				fmt.Println(times)
+			}
+
+			// Subject TimeTable ( Tuesday )
+			for {
+				scanner := bufio.NewScanner(os.Stdin)
+				fmt.Println("Tuesday's TimeTable")
+				fmt.Println("Enter Time (00:00) or x to finish: ")
+				scanner.Scan()
+				time := scanner.Text()
+				if time == "x" {
+					timeTable["Tuesday"] = times
+					break
+				}
+				times = append(times, time)
+			}
+			// Subject TimeTable ( Wednesday )
+			for {
+				scanner := bufio.NewScanner(os.Stdin)
+				fmt.Println("Wednesday's TimeTable")
+				fmt.Println("Enter Time (00:00) or x to finish: ")
+				scanner.Scan()
+				time := scanner.Text()
+				if time == "x" {
+					timeTable["Wednesday"] = times
+					break
+				}
+				times = append(times, time)
+			}
+			// Subject TimeTable ( Thursday )
+			for {
+				scanner := bufio.NewScanner(os.Stdin)
+				fmt.Println("Thursday's TimeTable")
+				fmt.Println("Enter Time (00:00) or x to finish: ")
+				scanner.Scan()
+				time := scanner.Text()
+				if time == "x" {
+					timeTable["Thursday"] = times
+					break
+				}
+				times = append(times, time)
+			}
+			// Subject TimeTable ( Friday )
+			for {
+				scanner := bufio.NewScanner(os.Stdin)
+				fmt.Println("Friday's TimeTable")
+				fmt.Println("Enter Time (00:00) or x to finish: ")
+				scanner.Scan()
+				time := scanner.Text()
+				if time == "x" {
+					timeTable["Friday"] = times
+					break
+				}
+				times = append(times, time)
+			}
+			subject.TimeTable = timeTable
+			fmt.Printf("Subject Time Table Changed: %v", subject.TimeTable)
+			break
+		}
+	}
 }
 
 // View Menu
+
 func viewMenu() {
 	for {
 		var menu string = "View Menu"
@@ -547,6 +659,7 @@ func viewStudent() {
 // View Subjects
 func viewSubject() {
 	for _, v := range SUBJECTS {
+		fmt.Println("\n\n\n\n\n ")
 		fmt.Println("* Subject *")
 		fmt.Printf("Subject Name : %v \n", v.Name)
 		fmt.Printf("Time Table   : %v \n", v.TimeTable)
