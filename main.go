@@ -46,8 +46,21 @@ type Subject struct {
 type Class struct {
 	ClassCode    string
 	Teacher      *Teacher
-	Student      []*Student
+	Students     []*Student
 	creationDate string
+}
+
+// Get Currant Date and Time Function ( Returns TimeStamp String )
+func getDateTime() string {
+	today := time.Now()
+	year := today.Year()
+	month := today.Month()
+	day := today.Day()
+	hour := today.Hour()
+	minute := today.Minute()
+	second := today.Second()
+	currentDateTime := fmt.Sprintf("%v:%v:%v - %v/%v/%v", hour, minute, second, day, month, year)
+	return currentDateTime
 }
 
 // Main Menu
@@ -83,27 +96,68 @@ func mainMenu() {
 	}
 }
 
-// Assign Menu
-func assignMenu() {
+// Create Menu
+func createMenu() {
 	for {
-		var menu string = "Assignment Menu"
-		var assignU string = "Assign Users"
-		var assignS string = "Assign Subjects"
+		var menu string = "Create Menu"
+		var createU string = "Creates a User"
+		var createC string = "Creates a Class"
+		var createS string = "Creates a Subject"
 		var mm string = "Go back to Main Menu"
 
 		fmt.Println("\n\n\n\n\n ")
 		fmt.Printf("\n\n %#25q \n\n", menu)
-		fmt.Printf("/assignUser %#30q \n", assignU)
-		fmt.Printf("/assignSubject %#30q \n\n", assignS)
-		fmt.Printf("/mainMenu %#40q \n", mm)
+		fmt.Printf("/createUser %#30q \n", createU)
+		fmt.Printf("/createClass %#30q \n", createC)
+		fmt.Printf("/createSubject %#30q \n\n", createS)
+		fmt.Printf("/mainMenu %#38q \n", mm)
+
+		fmt.Println("\nChoice: ")
 
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		menuOption := scanner.Text()
-		if menuOption == "/assignUser" {
-			fmt.Println("Assign User To Class >:(")
-		} else if menuOption == "/assignSubject" {
-			assignSubject()
+		if menuOption == "/createUser" {
+			createUser()
+		} else if menuOption == "/createClass" {
+			createClass()
+		} else if menuOption == "/createSubject" {
+			createSubject()
+		} else if menuOption == "/editUser" {
+			fmt.Println("Edit User?")
+		} else if menuOption == "/mainMenu" {
+			mainMenu()
+		}
+	}
+}
+
+// View Menu
+func viewMenu() {
+	for {
+		var menu string = "View Menu"
+		var viewU string = "Views Users"
+		var viewC string = "Views Classes"
+		var viewS string = "Views a Subjects"
+		var mm string = "Go back to Main Menu"
+
+		fmt.Println("\n\n\n\n\n ")
+		fmt.Printf("\n\n %#25q \n\n", menu)
+		fmt.Printf("/viewUser %#30q \n", viewU)
+		fmt.Printf("/viewClass %#31q \n", viewC)
+		fmt.Printf("/viewSubject %#32q \n\n", viewS)
+		fmt.Printf("/mainMenu %#39q \n", mm)
+
+		fmt.Println("\nChoice: ")
+
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		menuOption := scanner.Text()
+		if menuOption == "/viewUser" {
+			viewUser()
+		} else if menuOption == "/viewClass" {
+			viewClass()
+		} else if menuOption == "/viewSubject" {
+			viewSubject()
 		} else if menuOption == "/mainMenu" {
 			mainMenu()
 		}
@@ -142,6 +196,420 @@ func editMenu() {
 	}
 }
 
+// Assign Menu
+func assignMenu() {
+	for {
+		var menu string = "Assignment Menu"
+		var assignU string = "Assign Users"
+		var assignS string = "Assign Subjects"
+		var mm string = "Go back to Main Menu"
+
+		fmt.Println("\n\n\n\n\n ")
+		fmt.Printf("\n\n %#25q \n\n", menu)
+		fmt.Printf("/assignUser %#30q \n", assignU)
+		fmt.Printf("/assignSubject %#30q \n\n", assignS)
+		fmt.Printf("/mainMenu %#40q \n", mm)
+
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		menuOption := scanner.Text()
+		if menuOption == "/assignUser" {
+			assignUser()
+		} else if menuOption == "/assignSubject" {
+			assignSubject()
+		} else if menuOption == "/mainMenu" {
+			mainMenu()
+		}
+	}
+}
+
+// Create User Menu
+func createUser() {
+	for {
+		var userMenu string = "Create User Menu"
+		var createT string = "Create a Teacher"
+		var createS string = "Create a Student"
+		var mm string = "Go back to Main Menu"
+
+		fmt.Println("\n\n\n\n\n ")
+		fmt.Printf("\n\n %#25q \n\n", userMenu)
+		fmt.Printf("/createTeacher %#30q \n", createT)
+		fmt.Printf("/createStudent %#30q \n\n", createS)
+		fmt.Printf("/mainMenu %#39q \n", mm)
+		fmt.Printf("\n")
+		fmt.Printf("Choice: ")
+
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		userOption := scanner.Text()
+		if userOption == "/createTeacher" {
+			createTeacher()
+		} else if userOption == "/createStudent" {
+			createStudent()
+		} else if userOption == "/mainMenu" {
+			mainMenu()
+		}
+	}
+}
+
+func createClass() {
+	var code string
+	var teacher *Teacher = &Teacher{}
+	var students []*Student = []*Student{}
+	var creation string = getDateTime()
+
+	for {
+		fmt.Printf("\n")
+		fmt.Printf("Enter Code For The Class: ")
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		code = scanner.Text()
+		fmt.Printf("\n")
+		fmt.Printf("Your Class Code Is: %v \n", code)
+		break
+	}
+	classroom := &Class{code, teacher, students, creation}
+	CLASSES = append(CLASSES, classroom)
+	fmt.Println(*classroom)
+}
+
+// Create Teacher
+func createTeacher() {
+	var fname string
+	var sname string
+	var email string
+	var number string
+	var wage float32
+	var mrPrincipal bool
+	var mrVice bool
+	var timeStamp string
+
+	for {
+		// Get FirstName
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("\n\n\n\n\n ")
+		fmt.Printf("Please Enter Teachers First Name: ")
+		scanner.Scan()
+		fname = scanner.Text()
+		break
+	}
+	for {
+		// Get SecondName
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Printf("Please Enter Teachers Second Name: ")
+		scanner.Scan()
+		sname = scanner.Text()
+		break
+	}
+	for {
+		// Get Email
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Printf("Please Enter Teachers Email: ")
+		scanner.Scan()
+		email = scanner.Text()
+		break
+	}
+	for {
+		// Get Number
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Printf("Please Enter Teachers Phone Number: ")
+		scanner.Scan()
+		number = scanner.Text()
+		break
+	}
+	for {
+		// Get Wage
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Printf("Please Enter Teachers Wage: ")
+		scanner.Scan()
+		twage, err := strconv.ParseFloat(scanner.Text(), 10)
+		if err != nil {
+			fmt.Printf("Oops: %v", err)
+		}
+		wage = float32(twage)
+		break
+	}
+	for {
+		// Get Primary Authority Level
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("Is This Teacher A Principal?: ")
+		scanner.Scan()
+		principal := scanner.Text()
+
+		if strings.ToLower(principal) == "yes" {
+			mrPrincipal = true
+			break
+		} else if strings.ToLower(principal) == "no" {
+			mrPrincipal = false
+			break
+		}
+	}
+	for {
+		// Get Secondary Level
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("Is This Teacher A Vice Principal?: ")
+		scanner.Scan()
+		vice := scanner.Text()
+
+		if strings.ToLower(vice) == "yes" {
+			mrVice = true
+			break
+		} else if strings.ToLower(vice) == "no" {
+			mrVice = false
+			break
+		}
+	}
+	for {
+		// Get TimeStamp
+		timeStamp = getDateTime()
+		break
+	}
+	newTeacher := &Teacher{
+		fname,
+		sname,
+		email,
+		number,
+		wage,
+		&[]Subject{},
+		mrPrincipal,
+		mrVice,
+		timeStamp,
+	}
+	TEACHERS = append(TEACHERS, newTeacher)
+	fmt.Println(*newTeacher)
+
+	mainMenu()
+}
+
+func createStudent() {
+	var fname string
+	var sname string
+	var grades map[string]int = map[string]int{}
+	var dob string
+	var timeStamp string
+
+	for {
+		// Get FirstName
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("\n\n\n\n\n ")
+		fmt.Printf("Please Enter Students First Name: ")
+		scanner.Scan()
+		fname = scanner.Text()
+		break
+	}
+	for {
+		// Get SecondName
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Printf("Please Enter Students Second Name: ")
+		scanner.Scan()
+		sname = scanner.Text()
+		break
+	}
+	for {
+		// Get DOB
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Printf("Please Enter Students Date of Birth: ")
+		scanner.Scan()
+		dob = scanner.Text()
+		break
+	}
+	for {
+		// Get TimeStamp
+		timeStamp = getDateTime()
+		break
+	}
+	newStudent := &Student{
+		fname,
+		sname,
+		&[]Subject{},
+		grades,
+		dob,
+		timeStamp,
+	}
+	STUDENTS = append(STUDENTS, newStudent)
+	fmt.Println(*newStudent)
+
+	mainMenu()
+}
+
+func createSubject() {
+	var name string
+	var times []string
+	var timeTable map[string][]string
+
+	// Subject Name
+	for {
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("\n\n\n\n\n ")
+		fmt.Printf("Name of this Subject: ")
+		scanner.Scan()
+		name = scanner.Text()
+		break
+	}
+	// Subject TimeTable ( Monday )
+
+	for {
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("Monday's TimeTable")
+		fmt.Printf("Enter Time (00:00) or x to finish: ")
+		scanner.Scan()
+		time := scanner.Text()
+		if time == "x" {
+			timeTable = map[string][]string{"Monday": times}
+			fmt.Println(timeTable["Monday"])
+			break
+		}
+		times = append(times, time)
+		fmt.Println(times)
+	}
+
+	// Subject TimeTable ( Tuesday )
+	for {
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("Tuesday's TimeTable")
+		fmt.Printf("Enter Time (00:00) or x to finish: ")
+		scanner.Scan()
+		time := scanner.Text()
+		if time == "x" {
+			timeTable["Tuesday"] = times
+			break
+		}
+		times = append(times, time)
+	}
+	// Subject TimeTable ( Wednesday )
+	for {
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("Wednesday's TimeTable")
+		fmt.Printf("Enter Time (00:00) or x to finish: ")
+		scanner.Scan()
+		time := scanner.Text()
+		if time == "x" {
+			timeTable["Wednesday"] = times
+			break
+		}
+		times = append(times, time)
+	}
+	// Subject TimeTable ( Thursday )
+	for {
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("Thursday's TimeTable")
+		fmt.Printf("Enter Time (00:00) or x to finish: ")
+		scanner.Scan()
+		time := scanner.Text()
+		if time == "x" {
+			timeTable["Thursday"] = times
+			break
+		}
+		times = append(times, time)
+	}
+	// Subject TimeTable ( Friday )
+	for {
+		scanner := bufio.NewScanner(os.Stdin)
+		fmt.Println("Friday's TimeTable")
+		fmt.Printf("Enter Time (00:00) or x to finish: ")
+		scanner.Scan()
+		time := scanner.Text()
+		if time == "x" {
+			timeTable["Friday"] = times
+			break
+		}
+		times = append(times, time)
+	}
+	newSubject := &Subject{name, timeTable}
+	SUBJECTS = append(SUBJECTS, newSubject)
+	fmt.Println(*newSubject)
+
+	mainMenu()
+}
+
+// View User Menu
+func viewUser() {
+	for {
+		var userMenu string = "View User Menu"
+		var viewT string = "View a Teacher"
+		var viewS string = "View a Student"
+		var mm string = "Go back to Main Menu"
+
+		fmt.Println("\n\n\n\n\n ")
+		fmt.Printf("\n\n %#25q \n\n", userMenu)
+		fmt.Printf("/viewTeacher %#30q \n", viewT)
+		fmt.Printf("/viewStudent %#30q \n\n", viewS)
+		fmt.Printf("/mainMenu %#39q \n", mm)
+		fmt.Println("\nChoice: ")
+
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		userOption := scanner.Text()
+		if userOption == "/viewTeacher" {
+			viewTeacher()
+		} else if userOption == "/viewStudent" {
+			viewStudent()
+		} else if userOption == "/mainMenu" {
+			mainMenu()
+		}
+	}
+}
+
+// View Teachers
+func viewTeacher() {
+	for _, v := range TEACHERS {
+		name := v.FirstName + " " + v.LastName
+		fmt.Println("\n\n\n\n\n ")
+		fmt.Println("* Teacher *")
+		fmt.Printf("Name                 : %v \n", name)
+		fmt.Printf("Email                : %v \n", v.Email)
+		fmt.Printf("Number               : %v \n", v.Number)
+		fmt.Printf("Wage                 : %v \n", v.Wage)
+		fmt.Printf("Subjects             : %v \n", v.Subjects)
+		if v.isPrincipal {
+			fmt.Println("This Person is the Principal! ")
+		} else if v.isVicePrincipal {
+			fmt.Println("This Person is the Vice Principal!")
+		}
+		fmt.Printf("Started Working here : %v \n", v.hireDate)
+	}
+}
+
+// View Students
+func viewStudent() {
+	for _, v := range STUDENTS {
+		name := v.FirstName + " " + v.LastName
+		fmt.Println("\n\n\n\n\n ")
+		fmt.Println("* Student *")
+		fmt.Printf("Name                  : %v \n", name)
+		fmt.Printf("Subjects              : %v \n", v.Subjects)
+		fmt.Printf("Grades                : %v \n", v.Grades)
+		fmt.Printf("Date of Birth         : %v \n", v.DOB)
+		fmt.Printf("Subjects              : %v \n", v.Subjects)
+		fmt.Printf("Started Studying here : %v \n", v.enrollDate)
+	}
+}
+
+// View Classes
+func viewClass() {
+	for _, c := range CLASSES {
+		fmt.Println("\n\n\n\n\n ")
+		fmt.Println("* Class *")
+		fmt.Printf("Code          : %v \n", c.ClassCode)
+		fmt.Printf("Teacher       : %v \n", c.Teacher.FirstName)
+		fmt.Println("Students      :")
+		for _, s := range c.Students {
+			fmt.Println(s.FirstName)
+		}
+		fmt.Printf("Class Created : %v \n", c.creationDate)
+	}
+}
+
+// View Subjects
+func viewSubject() {
+	for _, v := range SUBJECTS {
+		fmt.Println("\n\n\n\n\n ")
+		fmt.Println("* Subject *")
+		fmt.Printf("Subject Name : %v \n", v.Name)
+		fmt.Printf("Time Table   : %v \n", v.TimeTable)
+	}
+}
+
 // Edit User
 func editUser() {
 	for {
@@ -177,7 +645,8 @@ func editTeacher() {
 
 	viewTeacher()
 	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Println("Please Enter The Name Of The Teacher You Would Like To Edit: ")
+	fmt.Printf("\n")
+	fmt.Printf("Please Enter The Name Of The Teacher You Would Like To Edit: ")
 	scanner.Scan()
 	tChoice = scanner.Text()
 	for _, v := range TEACHERS {
@@ -196,7 +665,7 @@ func editTeacher() {
 			} else if teacher.isVicePrincipal {
 				fmt.Println("This Person is the Vice Principal!")
 			}
-			fmt.Printf("Started Working here : %v \n", teacher.hireDate)
+			fmt.Printf("Started Working here: %v \n", teacher.hireDate)
 		}
 	}
 	for {
@@ -217,13 +686,14 @@ func editTeacher() {
 		fmt.Printf("/authorityLevel %#30q \n\n", alevel)
 		fmt.Printf("/mainMenu %#29q \n", mm)
 
-		fmt.Println("\nChoice: ")
+		fmt.Printf("\nChoice: ")
 
 		scanner = bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		editOption := scanner.Text()
 		if editOption == "/firstName" {
-			fmt.Println("Please Enter New First Name: ")
+			fmt.Printf("\n")
+			fmt.Printf("Please Enter New First Name: ")
 			scanner = bufio.NewScanner(os.Stdin)
 			scanner.Scan()
 			newFname := scanner.Text()
@@ -232,7 +702,8 @@ func editTeacher() {
 			fmt.Printf("Teachers Name Changed From %v to %v", oldFname, newFname)
 			break
 		} else if editOption == "/lastName" {
-			fmt.Println("Please Enter New Last Name: ")
+			fmt.Printf("\n")
+			fmt.Printf("Please Enter New Last Name: ")
 			scanner = bufio.NewScanner(os.Stdin)
 			scanner.Scan()
 			newLname := scanner.Text()
@@ -241,7 +712,8 @@ func editTeacher() {
 			fmt.Printf("Teachers Name Changed From %v to %v", oldLname, newLname)
 			break
 		} else if editOption == "/email" {
-			fmt.Println("Please Enter New Email: ")
+			fmt.Printf("\n")
+			fmt.Printf("Please Enter New Email: ")
 			scanner = bufio.NewScanner(os.Stdin)
 			scanner.Scan()
 			newEmail := scanner.Text()
@@ -250,7 +722,8 @@ func editTeacher() {
 			fmt.Printf("Teachers Email Changed From %v to %v", oldEmail, newEmail)
 			break
 		} else if editOption == "/number" {
-			fmt.Println("Please Enter New Number: ")
+			fmt.Printf("\n")
+			fmt.Printf("Please Enter New Number: ")
 			scanner = bufio.NewScanner(os.Stdin)
 			scanner.Scan()
 			newNumber := scanner.Text()
@@ -259,7 +732,8 @@ func editTeacher() {
 			fmt.Printf("Teachers Email Changed From %v to %v", oldNumber, newNumber)
 			break
 		} else if editOption == "/wage" {
-			fmt.Println("Please Enter New Wage: ")
+			fmt.Printf("\n")
+			fmt.Printf("Please Enter New Wage: ")
 			scanner = bufio.NewScanner(os.Stdin)
 			scanner.Scan()
 			newWage, err := strconv.ParseFloat(scanner.Text(), 10)
@@ -268,7 +742,7 @@ func editTeacher() {
 			}
 			oldWage := teacher.Wage
 			teacher.Wage = float32(newWage)
-			fmt.Printf("Teachers Wage Changed From %v to %v", oldWage, newWage)
+			fmt.Printf("\nTeachers Wage Changed From %v to %v", oldWage, newWage)
 			break
 		} else if editOption == "/authorityLevel" {
 			var v string = "Change To Vice Principal"
@@ -355,7 +829,8 @@ func editStudent() {
 	var student *Student
 
 	viewStudent()
-	fmt.Println("Please Enter The Name Of The Student You Would Like To Edit: ")
+	fmt.Printf("\n")
+	fmt.Printf("Please Enter The Name Of The Student You Would Like To Edit: ")
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	sChoice = scanner.Text()
@@ -392,7 +867,8 @@ func editStudent() {
 		scanner.Scan()
 		editOption := scanner.Text()
 		if editOption == "/firstName" {
-			fmt.Println("Please Enter New First Name: ")
+			fmt.Printf("\n")
+			fmt.Printf("Please Enter New First Name: ")
 			scanner = bufio.NewScanner(os.Stdin)
 			scanner.Scan()
 			newFname := scanner.Text()
@@ -401,7 +877,8 @@ func editStudent() {
 			fmt.Printf("Teachers Name Changed From %v to %v", oldFname, newFname)
 			break
 		} else if editOption == "/lastName" {
-			fmt.Println("Please Enter New Last Name: ")
+			fmt.Printf("\n")
+			fmt.Printf("Please Enter New Last Name: ")
 			scanner = bufio.NewScanner(os.Stdin)
 			scanner.Scan()
 			newLname := scanner.Text()
@@ -410,7 +887,8 @@ func editStudent() {
 			fmt.Printf("Teachers Name Changed From %v to %v", oldLname, newLname)
 			break
 		} else if editOption == "/dob" {
-			fmt.Println("Please Enter New Date Of Birth: ")
+			fmt.Printf("\n")
+			fmt.Printf("Please Enter New Date Of Birth: ")
 			scanner = bufio.NewScanner(os.Stdin)
 			scanner.Scan()
 			newDOB := scanner.Text()
@@ -419,7 +897,8 @@ func editStudent() {
 			fmt.Printf("Teachers Name Changed From %v to %v", oldDOB, newDOB)
 			break
 		} else if editOption == "/grades" {
-			fmt.Println("Enter Subject Name to Add Grades: ")
+			fmt.Printf("\n")
+			fmt.Printf("Enter Subject Name to Add Grades: ")
 			scanner = bufio.NewScanner(os.Stdin)
 			scanner.Scan()
 			subName := scanner.Text()
@@ -443,7 +922,34 @@ func editStudent() {
 }
 
 func editClass() {
-	fmt.Println("Beans Edit Class")
+	var classroom *Class
+	var classCode string
+
+	for {
+		viewClass()
+		fmt.Printf("\n")
+		fmt.Printf("Enter Class Code of the Classroom You Want To Edit: ")
+		scanner := bufio.NewScanner(os.Stdin)
+		scanner.Scan()
+		classCode = scanner.Text()
+		for _, c := range CLASSES {
+			if classCode == c.ClassCode {
+				classroom = &*c
+
+			}
+		}
+		if classroom != nil {
+			break
+		}
+	}
+	fmt.Printf("\n")
+	fmt.Printf("Enter New Code For Class: ")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	newCode := scanner.Text()
+	oldCode := classroom.ClassCode
+	classroom.ClassCode = newCode
+	fmt.Printf("Classroom Code Changed From %v to %v \n", oldCode, newCode)
 }
 
 func editSubject() {
@@ -456,7 +962,8 @@ func editSubject() {
 
 	viewSubject()
 	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Println("Please Enter The Name Of The Subject You Would Like To Edit: ")
+	fmt.Printf("\n")
+	fmt.Printf("Please Enter The Name Of The Subject You Would Like To Edit: ")
 	scanner.Scan()
 	sChoice = scanner.Text()
 	for _, v := range SUBJECTS {
@@ -477,18 +984,20 @@ func editSubject() {
 		scanner.Scan()
 		sChoice = scanner.Text()
 		if sChoice == "/name" {
-			fmt.Println("Enter New Subject Name: ")
+			fmt.Printf("\n")
+			fmt.Printf("Enter New Subject Name: ")
 			scanner.Scan()
 			sName := scanner.Text()
 			oldsName := subject.Name
 			subject.Name = sName
-			fmt.Printf("Subject Name Changed From %v to %v!", oldsName, subject.Name)
+			fmt.Printf("\nSubject Name Changed From %v to %v!", oldsName, subject.Name)
 			break
 		} else if sChoice == "/timeTable" {
 			for {
 				scanner := bufio.NewScanner(os.Stdin)
+				fmt.Printf("\n")
 				fmt.Println("Monday's TimeTable")
-				fmt.Println("Enter Time (00:00) or x to finish: ")
+				fmt.Printf("Enter Time (00:00) or x to finish: ")
 				scanner.Scan()
 				time := scanner.Text()
 				if time == "x" {
@@ -503,8 +1012,9 @@ func editSubject() {
 			// Subject TimeTable ( Tuesday )
 			for {
 				scanner := bufio.NewScanner(os.Stdin)
+				fmt.Printf("\n")
 				fmt.Println("Tuesday's TimeTable")
-				fmt.Println("Enter Time (00:00) or x to finish: ")
+				fmt.Printf("Enter Time (00:00) or x to finish: ")
 				scanner.Scan()
 				time := scanner.Text()
 				if time == "x" {
@@ -516,8 +1026,9 @@ func editSubject() {
 			// Subject TimeTable ( Wednesday )
 			for {
 				scanner := bufio.NewScanner(os.Stdin)
+				fmt.Printf("\n")
 				fmt.Println("Wednesday's TimeTable")
-				fmt.Println("Enter Time (00:00) or x to finish: ")
+				fmt.Printf("Enter Time (00:00) or x to finish: ")
 				scanner.Scan()
 				time := scanner.Text()
 				if time == "x" {
@@ -529,8 +1040,9 @@ func editSubject() {
 			// Subject TimeTable ( Thursday )
 			for {
 				scanner := bufio.NewScanner(os.Stdin)
+				fmt.Printf("\n")
 				fmt.Println("Thursday's TimeTable")
-				fmt.Println("Enter Time (00:00) or x to finish: ")
+				fmt.Printf("Enter Time (00:00) or x to finish: ")
 				scanner.Scan()
 				time := scanner.Text()
 				if time == "x" {
@@ -542,8 +1054,9 @@ func editSubject() {
 			// Subject TimeTable ( Friday )
 			for {
 				scanner := bufio.NewScanner(os.Stdin)
+				fmt.Printf("\n")
 				fmt.Println("Friday's TimeTable")
-				fmt.Println("Enter Time (00:00) or x to finish: ")
+				fmt.Printf("Enter Time (00:00) or x to finish: ")
 				scanner.Scan()
 				time := scanner.Text()
 				if time == "x" {
@@ -552,6 +1065,7 @@ func editSubject() {
 				}
 				times = append(times, time)
 			}
+			fmt.Printf("\n")
 			subject.TimeTable = timeTable
 			fmt.Printf("Subject Time Table Changed: %v", subject.TimeTable)
 			break
@@ -559,436 +1073,98 @@ func editSubject() {
 	}
 }
 
-// View Menu
-
-func viewMenu() {
+// Assing User Menu
+func assignUser() {
 	for {
-		var menu string = "View Menu"
-		var viewU string = "Views Users"
-		var viewC string = "Views Classes"
-		var viewS string = "Views a Subjects"
-		var mm string = "Go back to Main Menu"
-
-		fmt.Println("\n\n\n\n\n ")
-		fmt.Printf("\n\n %#25q \n\n", menu)
-		fmt.Printf("/viewUser %#30q \n", viewU)
-		fmt.Printf("/viewClass %#31q \n", viewC)
-		fmt.Printf("/viewSubject %#32q \n\n", viewS)
-		fmt.Printf("/mainMenu %#39q \n", mm)
-
-		fmt.Println("\nChoice: ")
-
-		scanner := bufio.NewScanner(os.Stdin)
-		scanner.Scan()
-		menuOption := scanner.Text()
-		if menuOption == "/viewUser" {
-			viewUser()
-		} else if menuOption == "/viewClass" {
-			fmt.Println("View Class? >:(")
-		} else if menuOption == "/viewSubject" {
-			viewSubject()
-		} else if menuOption == "/mainMenu" {
-			mainMenu()
-		}
-	}
-}
-
-// View User Menu
-func viewUser() {
-	for {
-		var userMenu string = "View User Menu"
-		var viewT string = "View a Teacher"
-		var viewS string = "View a Student"
+		var userMenu string = "Assign User Menu"
+		var assignT string = "Assign Teacher"
+		var assignS string = "Assign Student"
 		var mm string = "Go back to Main Menu"
 
 		fmt.Println("\n\n\n\n\n ")
 		fmt.Printf("\n\n %#25q \n\n", userMenu)
-		fmt.Printf("/viewTeacher %#30q \n", viewT)
-		fmt.Printf("/viewStudent %#30q \n\n", viewS)
-		fmt.Printf("/mainMenu %#39q \n", mm)
-		fmt.Println("\nChoice: ")
+		fmt.Printf("/assignTeacher %#30q \n", assignT)
+		fmt.Printf("/assignStudent %#30q \n\n", assignS)
+		fmt.Printf("/mainMenu %#41q \n", mm)
+		fmt.Printf("\n")
+		fmt.Printf("Choice: ")
 
 		scanner := bufio.NewScanner(os.Stdin)
 		scanner.Scan()
 		userOption := scanner.Text()
-		if userOption == "/viewTeacher" {
-			viewTeacher()
-		} else if userOption == "/viewStudent" {
-			viewStudent()
+		if userOption == "/assignTeacher" {
+			assignTeacher()
+		} else if userOption == "/assignStudent" {
+			assignStudent()
 		} else if userOption == "/mainMenu" {
 			mainMenu()
 		}
 	}
 }
 
-// View Teachers
-func viewTeacher() {
-	for _, v := range TEACHERS {
-		name := v.FirstName + " " + v.LastName
-		fmt.Println("\n\n\n\n\n ")
-		fmt.Println("* Teacher *")
-		fmt.Printf("Name                 : %v \n", name)
-		fmt.Printf("Email                : %v \n", v.Email)
-		fmt.Printf("Number               : %v \n", v.Number)
-		fmt.Printf("Wage                 : %v \n", v.Wage)
-		fmt.Printf("Subjects             : %v \n", v.Subjects)
-		if v.isPrincipal {
-			fmt.Println("This Person is the Principal! ")
-		} else if v.isVicePrincipal {
-			fmt.Println("This Person is the Vice Principal!")
+// Assign Teacher
+func assignTeacher() {
+	var teacher *Teacher
+	var class *Class
+
+	viewTeacher()
+	fmt.Printf("\n")
+	fmt.Printf("Please Enter The Teacher You Would Like To Assign: ")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	tChoice := scanner.Text()
+	for _, t := range TEACHERS {
+		if strings.ToLower(tChoice) == strings.ToLower(t.FirstName) {
+			teacher = &*t
+			break
 		}
-		fmt.Printf("Started Working here : %v \n", v.hireDate)
+
 	}
+	viewClass()
+	fmt.Printf("\n")
+	fmt.Printf("Please Enter The Class You Would Like To Assign %v To: ", teacher.FirstName)
+	scanner = bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	cChoice := scanner.Text()
+	for _, c := range CLASSES {
+		if cChoice == c.ClassCode {
+			class = &*c
+			break
+		}
+	}
+	class.Teacher = teacher
 }
 
-// View Students
-func viewStudent() {
-	for _, v := range STUDENTS {
-		name := v.FirstName + " " + v.LastName
-		fmt.Println("\n\n\n\n\n ")
-		fmt.Println("* Student *")
-		fmt.Printf("Name                  : %v \n", name)
-		fmt.Printf("Subjects              : %v \n", v.Subjects)
-		fmt.Printf("Grades                : %v \n", v.Grades)
-		fmt.Printf("Date of Birth         : %v \n", v.DOB)
-		fmt.Printf("Subjects              : %v \n", v.Subjects)
-		fmt.Printf("Started Studying here : %v \n", v.enrollDate)
-	}
-}
+// Assign Student
+func assignStudent() {
+	var student *Student
+	var class *Class
 
-// View Subjects
-func viewSubject() {
-	for _, v := range SUBJECTS {
-		fmt.Println("\n\n\n\n\n ")
-		fmt.Println("* Subject *")
-		fmt.Printf("Subject Name : %v \n", v.Name)
-		fmt.Printf("Time Table   : %v \n", v.TimeTable)
-	}
-}
-
-// Create Menu
-func createMenu() {
-	for {
-		var menu string = "Create Menu"
-		var createU string = "Creates a User"
-		var createC string = "Creates a Class"
-		var createS string = "Creates a Subject"
-		var mm string = "Go back to Main Menu"
-
-		fmt.Println("\n\n\n\n\n ")
-		fmt.Printf("\n\n %#25q \n\n", menu)
-		fmt.Printf("/createUser %#30q \n", createU)
-		fmt.Printf("/createClass %#30q \n", createC)
-		fmt.Printf("/createSubject %#30q \n\n", createS)
-		fmt.Printf("/mainMenu %#38q \n", mm)
-
-		fmt.Println("\nChoice: ")
-
-		scanner := bufio.NewScanner(os.Stdin)
-		scanner.Scan()
-		menuOption := scanner.Text()
-		if menuOption == "/createUser" {
-			createUser()
-		} else if menuOption == "/createClass" {
-			fmt.Println("Create Class? >:(")
-		} else if menuOption == "/createSubject" {
-			createSubject()
-		} else if menuOption == "/editUser" {
-			fmt.Println("Edit User?")
-		} else if menuOption == "/mainMenu" {
-			mainMenu()
-		}
-	}
-}
-
-// Create User Menu
-func createUser() {
-	for {
-		var userMenu string = "Create User Menu"
-		var createT string = "Create a Teacher"
-		var createS string = "Create a Student"
-		var mm string = "Go back to Main Menu"
-
-		fmt.Println("\n\n\n\n\n ")
-		fmt.Printf("\n\n %#25q \n\n", userMenu)
-		fmt.Printf("/createTeacher %#30q \n", createT)
-		fmt.Printf("/createStudent %#30q \n\n", createS)
-		fmt.Printf("/mainMenu %#39q \n", mm)
-		fmt.Println("\nChoice: ")
-
-		scanner := bufio.NewScanner(os.Stdin)
-		scanner.Scan()
-		userOption := scanner.Text()
-		if userOption == "/createTeacher" {
-			createTeacher()
-		} else if userOption == "/createStudent" {
-			createStudent()
-		} else if userOption == "/mainMenu" {
-			mainMenu()
-		}
-	}
-}
-
-// Get Currant Date and Time Function ( Returns TimeStamp String )
-func getDateTime() string {
-	today := time.Now()
-	year := today.Year()
-	month := today.Month()
-	day := today.Day()
-	hour := today.Hour()
-	minute := today.Minute()
-	second := today.Second()
-	currentDateTime := fmt.Sprintf("%v:%v:%v - %v/%v/%v", hour, minute, second, day, month, year)
-	return currentDateTime
-}
-
-// Create Teacher
-func createTeacher() {
-	var fname string
-	var sname string
-	var email string
-	var number string
-	var wage float32
-	var mrPrincipal bool
-	var mrVice bool
-	var timeStamp string
-
-	for {
-		// Get FirstName
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("\n\n\n\n\n ")
-		fmt.Println("Please Enter Teachers First Name: ")
-		scanner.Scan()
-		fname = scanner.Text()
-		break
-	}
-	for {
-		// Get SecondName
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Please Enter Teachers Second Name: ")
-		scanner.Scan()
-		sname = scanner.Text()
-		break
-	}
-	for {
-		// Get Email
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Please Enter Teachers Email: ")
-		scanner.Scan()
-		email = scanner.Text()
-		break
-	}
-	for {
-		// Get Number
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Please Enter Teachers Phone Number: ")
-		scanner.Scan()
-		number = scanner.Text()
-		break
-	}
-	for {
-		// Get Wage
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Please Enter Teachers Wage: ")
-		scanner.Scan()
-		twage, err := strconv.ParseFloat(scanner.Text(), 10)
-		if err != nil {
-			fmt.Printf("Oops: %v", err)
-		}
-		wage = float32(twage)
-		break
-	}
-	for {
-		// Get Primary Authority Level
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Is This Teacher A Principal?: ")
-		scanner.Scan()
-		principal := scanner.Text()
-
-		if strings.ToLower(principal) == "yes" {
-			mrPrincipal = true
-			break
-		} else if strings.ToLower(principal) == "no" {
-			mrPrincipal = false
+	viewStudent()
+	fmt.Printf("\n")
+	fmt.Printf("Please Enter The Student You Would Like To Assign: ")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	sChoice := scanner.Text()
+	for _, s := range STUDENTS {
+		if strings.ToLower(sChoice) == strings.ToLower(s.FirstName) {
+			student = &*s
 			break
 		}
 	}
-	for {
-		// Get Secondary Level
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Is This Teacher A Vice Principal?: ")
-		scanner.Scan()
-		vice := scanner.Text()
-
-		if strings.ToLower(vice) == "yes" {
-			mrVice = true
-			break
-		} else if strings.ToLower(vice) == "no" {
-			mrVice = false
+	viewClass()
+	fmt.Printf("\n")
+	fmt.Printf("Please Enter The Class You Would Like To Assign %v To: ", student.FirstName)
+	scanner = bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	cChoice := scanner.Text()
+	for _, c := range CLASSES {
+		if cChoice == c.ClassCode {
+			class = &*c
 			break
 		}
 	}
-	for {
-		// Get TimeStamp
-		timeStamp = getDateTime()
-		break
-	}
-	newTeacher := &Teacher{
-		fname,
-		sname,
-		email,
-		number,
-		wage,
-		&[]Subject{},
-		mrPrincipal,
-		mrVice,
-		timeStamp,
-	}
-	TEACHERS = append(TEACHERS, newTeacher)
-	fmt.Println(*newTeacher)
-
-	mainMenu()
-}
-
-func createStudent() {
-	var fname string
-	var sname string
-	var grades map[string]int = map[string]int{}
-	var dob string
-	var timeStamp string
-
-	for {
-		// Get FirstName
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("\n\n\n\n\n ")
-		fmt.Println("Please Enter Students First Name: ")
-		scanner.Scan()
-		fname = scanner.Text()
-		break
-	}
-	for {
-		// Get SecondName
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Please Enter Students Second Name: ")
-		scanner.Scan()
-		sname = scanner.Text()
-		break
-	}
-	for {
-		// Get DOB
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Please Enter Students Date of Birth: ")
-		scanner.Scan()
-		dob = scanner.Text()
-		break
-	}
-	for {
-		// Get TimeStamp
-		timeStamp = getDateTime()
-		break
-	}
-	newStudent := &Student{
-		fname,
-		sname,
-		&[]Subject{},
-		grades,
-		dob,
-		timeStamp,
-	}
-	STUDENTS = append(STUDENTS, newStudent)
-	fmt.Println(*newStudent)
-
-	mainMenu()
-}
-
-func createSubject() {
-	var name string
-	var times []string
-	var timeTable map[string][]string
-
-	// Subject Name
-	for {
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("\n\n\n\n\n ")
-		fmt.Println("Name of this Subject: ")
-		scanner.Scan()
-		name = scanner.Text()
-		break
-	}
-	// Subject TimeTable ( Monday )
-
-	for {
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Monday's TimeTable")
-		fmt.Println("Enter Time (00:00) or x to finish: ")
-		scanner.Scan()
-		time := scanner.Text()
-		if time == "x" {
-			timeTable = map[string][]string{"Monday": times}
-			fmt.Println(timeTable["Monday"])
-			break
-		}
-		times = append(times, time)
-		fmt.Println(times)
-	}
-
-	// Subject TimeTable ( Tuesday )
-	for {
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Tuesday's TimeTable")
-		fmt.Println("Enter Time (00:00) or x to finish: ")
-		scanner.Scan()
-		time := scanner.Text()
-		if time == "x" {
-			timeTable["Tuesday"] = times
-			break
-		}
-		times = append(times, time)
-	}
-	// Subject TimeTable ( Wednesday )
-	for {
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Wednesday's TimeTable")
-		fmt.Println("Enter Time (00:00) or x to finish: ")
-		scanner.Scan()
-		time := scanner.Text()
-		if time == "x" {
-			timeTable["Wednesday"] = times
-			break
-		}
-		times = append(times, time)
-	}
-	// Subject TimeTable ( Thursday )
-	for {
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Thursday's TimeTable")
-		fmt.Println("Enter Time (00:00) or x to finish: ")
-		scanner.Scan()
-		time := scanner.Text()
-		if time == "x" {
-			timeTable["Thursday"] = times
-			break
-		}
-		times = append(times, time)
-	}
-	// Subject TimeTable ( Friday )
-	for {
-		scanner := bufio.NewScanner(os.Stdin)
-		fmt.Println("Friday's TimeTable")
-		fmt.Println("Enter Time (00:00) or x to finish: ")
-		scanner.Scan()
-		time := scanner.Text()
-		if time == "x" {
-			timeTable["Friday"] = times
-			break
-		}
-		times = append(times, time)
-	}
-	newSubject := &Subject{name, timeTable}
-	SUBJECTS = append(SUBJECTS, newSubject)
-	fmt.Println(*newSubject)
-
-	mainMenu()
+	class.Students = append(class.Students, student)
 }
 
 // Assigning Subjects to Teachers and Students
@@ -1000,7 +1176,7 @@ func assignSubject() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	viewSubject()
-	fmt.Println("Please Enter The Subject You Would Like To Assign: ")
+	fmt.Printf("Please Enter The Subject You Would Like To Assign: ")
 	scanner.Scan()
 	subject := scanner.Text()
 	for _, v := range SUBJECTS {
